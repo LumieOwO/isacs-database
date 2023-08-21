@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-import os
 import json
 from functools import lru_cache
 from urllib.parse import unquote
@@ -7,16 +6,13 @@ from urllib.parse import unquote
 app = Flask(__name__)
 port = 3001
 
-auth_key = ""
 
 
 class DataHandler:
     def __init__(self, data_file_path):
         self.data_file_path = data_file_path
 
-    def authorize(self):
-        token = request.headers.get("Authorization")
-        return token == f"Bearer {auth_key}"
+
 
     @lru_cache(maxsize=None)
     def read_data(self):
@@ -45,7 +41,6 @@ class DataHandler:
             print("Error writing data:", e)
 
     def get_data(self):
-        if self.authorize():
             directory = unquote(request.headers.get("Directory", ""))
             data = self.read_data()
             response_data = data.get(
@@ -74,12 +69,8 @@ class DataHandler:
             success_response_body = jsonify(success_response_data)
 
             return success_response_body, 200
-        else:
-            unauthorized_response = jsonify({"success": False, "error": "Unauthorized"})
-            return unauthorized_response, 401
 
     def modify_data(self, modify_func):
-        if self.authorize():
             try:
                 data = self.read_data()
                 request_data = request.get_json()
@@ -101,8 +92,6 @@ class DataHandler:
                     jsonify({"success": False, "error": "Internal server error"}),
                     500,
                 )
-        else:
-            return jsonify({"success": False, "error": "Unauthorized"}), 401
 
     def set_data(self):
         return self.modify_data(self._set_data)
@@ -115,7 +104,6 @@ class DataHandler:
         return data
 
     def delete_data(self):
-        if self.authorize():
             try:
                 data = self.read_data()
                 directory = unquote(request.headers.get("Directory", ""))
@@ -136,8 +124,6 @@ class DataHandler:
                     jsonify({"success": False, "error": "Internal server error"}),
                     500,
                 )
-        else:
-            return jsonify({"success": False, "error": "Unauthorized"}), 401
 
     @staticmethod
     def _delete_data(data, directory):
@@ -165,4 +151,4 @@ def delete_data(data_file_path):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="", port=port)

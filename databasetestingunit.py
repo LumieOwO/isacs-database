@@ -1,10 +1,8 @@
 import requests
 
 base_url = "http://localhost:3001"
-auth_key = ""
 
 headers = {
-    "Authorization": f"Bearer {auth_key}",
     "Content-Type": "application/json",
 }
 
@@ -33,7 +31,7 @@ def test_delete(data_file_path, directory):
 
 def test_all_cases(data_file_path):
     directory = "isac"
-    value = "0[1]XE/e+82hdDBAgEAAAAAAAAgAvzR5hnPHCAAAAAAAAAAAAAAAgAAAAAAAAAAABAAAAAAAAAAAAAAAAACAABIAB-AAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAw-NAAAAAAAAAAAAAAAAQ--;F4HChYEAc3+iaGeMSBOAQNoCgPgqAdAGAswVAPeEkRxAP6tJvCAA;BC-CQEEgAOA;PYF8OomUE4wpckJFaqcBAAAAAAgxor7etMIA"
+    value = "1"
 
     print("Testing GET:")
     test_get(data_file_path, directory)
