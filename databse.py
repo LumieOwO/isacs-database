@@ -25,7 +25,16 @@ class DataHandler:
                 return data
         except Exception as e:
             print("Error reading data:", e)
-            return {}
+            return (
+                jsonify(
+                    {
+                        "Success": False,
+                        "StatusCode": 404,
+                        "StatusMessage": "Data Not Found!",
+                    }
+                ),
+                404,
+            )
 
     def write_data(self, data):
         try:
@@ -38,11 +47,35 @@ class DataHandler:
         if self.authorize():
             directory = request.headers.get("Directory", "")
             data = self.read_data()
-            return jsonify(
-                data.get(directory, {"success": False, "error": "Data not found"})
+            response_data = data.get(
+                directory,
+                {
+                    "Success": False,
+                    "StatusCode": 404,
+                    "StatusMessage": "Data Not Found!",
+                },
             )
+
+            if response_data == {
+                "Success": False,
+                "StatusCode": 404,
+                "StatusMessage": "Data Not Found!",
+            }:
+                response_body = jsonify(response_data)
+                return response_body, 404
+
+            success_response_data = {
+                "Success": True,
+                "StatusCode": 200,
+                "StatusMessage": "Data Successfully Found!",
+                "Body": response_data,
+            }
+            success_response_body = jsonify(success_response_data)
+
+            return success_response_body, 200
         else:
-            return jsonify({"success": False, "error": "Unauthorized"}), 401
+            unauthorized_response = jsonify({"success": False, "error": "Unauthorized"})
+            return unauthorized_response, 401
 
     def modify_data(self, modify_func):
         if self.authorize():

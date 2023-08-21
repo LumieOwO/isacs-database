@@ -53,8 +53,8 @@ def test_all_cases(data_file_path):
 
 if __name__ == "__main__":
     dirs = [
-        "Banned", 
-        #"Codes"
-            ]
+        "Banned",
+        # "Codes"
+    ]
     for dir in dirs:
         test_all_cases(dir)
