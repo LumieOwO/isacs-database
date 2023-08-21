@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import os
 import json
 from functools import lru_cache
+from urllib.parse import unquote
 
 app = Flask(__name__)
 port = 3001
@@ -45,7 +46,7 @@ class DataHandler:
 
     def get_data(self):
         if self.authorize():
-            directory = request.headers.get("Directory", "")
+            directory = unquote(request.headers.get("Directory", ""))
             data = self.read_data()
             response_data = data.get(
                 directory,
@@ -83,7 +84,7 @@ class DataHandler:
                 data = self.read_data()
                 request_data = request.get_json()
                 print(request_data)
-                directory = request.headers.get("Directory", "")
+                directory = unquote(request.headers.get("Directory", ""))
                 if directory is None:
                     return (
                         jsonify({"success": False, "error": "Invalid request data"}),
@@ -117,7 +118,7 @@ class DataHandler:
         if self.authorize():
             try:
                 data = self.read_data()
-                directory = request.headers.get("Directory", "")
+                directory = unquote(request.headers.get("Directory", ""))
 
                 if not directory:
                     return (
@@ -147,19 +148,19 @@ class DataHandler:
 
 @app.route("/<data_file_path>", methods=["GET"])
 def get_data(data_file_path):
-    data_handler = DataHandler(data_file_path)
+    data_handler = DataHandler(unquote(data_file_path))
     return data_handler.get_data()
 
 
 @app.route("/<data_file_path>", methods=["POST"])
 def set_data(data_file_path):
-    data_handler = DataHandler(data_file_path)
+    data_handler = DataHandler(unquote(data_file_path))
     return data_handler.set_data()
 
 
 @app.route("/<data_file_path>", methods=["DELETE"])
 def delete_data(data_file_path):
-    data_handler = DataHandler(data_file_path)
+    data_handler = DataHandler(unquote(data_file_path))
     return data_handler.delete_data()
 
 
