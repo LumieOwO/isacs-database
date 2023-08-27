@@ -12,7 +12,6 @@ class DataHandler:
     def __init__(self, data_file_path):
         self.data_file_path = data_file_path
 
-    @lru_cache(maxsize=None)
     def read_data(self):
         try:
             with open(f"data/{self.data_file_path}.msgpack", "rb") as f:
@@ -75,7 +74,7 @@ class DataHandler:
 
             modified_data = modify_func(data, directory, request_data)
             self.write_data(modified_data)
-            self.read_data.cache_clear()
+            self.read_data
             return jsonify({"success": True})
         except Exception as e:
             print("Error modifying data:", e)
@@ -107,7 +106,7 @@ class DataHandler:
 
             modified_data = self._delete_data(data, directory)
             self.write_data(modified_data)
-            self.read_data.cache_clear()
+            self.read_data
             return jsonify({"success": True})
         except Exception as e:
             print("Error deleting data:", e)
@@ -142,4 +141,4 @@ def delete_data(data_file_path):
 
 
 if __name__ == "__main__":
-    app.run(host="", port=port)
+    app.run(host="0.0.0.0")
