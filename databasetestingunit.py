@@ -1,6 +1,7 @@
 import requests
+import timeit
 
-base_url = "http://localhost:3001"
+base_url = "https://consideratedeliciousrar.idkdev2.repl.co"
 
 headers = {
     "Content-Type": "application/json",
@@ -29,30 +30,26 @@ def test_delete(data_file_path, directory):
     print(response.json())
 
 
-def test_all_cases(data_file_path):
+def test_all_cases():
     directory = "isac"
     value = "1"
+    dirs = ["Banned"]
+    for data_file_path in dirs:
+        print("Testing GET:")
+        test_get(data_file_path, directory)
 
-    print("Testing GET:")
-    test_get(data_file_path, directory)
+        print("\nTesting SET:")
+        test_set(data_file_path, directory, value)
 
-    print("\nTesting SET:")
-    test_set(data_file_path, directory, value)
+        print("\nTesting GET after SET:")
+        test_get(data_file_path, directory)
 
-    print("\nTesting GET after SET:")
-    test_get(data_file_path, directory)
+        print("\nTesting DELETE:")
+        test_delete(data_file_path, directory)
 
-    print("\nTesting DELETE:")
-    test_delete(data_file_path, directory)
-
-    print("\nTesting GET after DELETE:")
-    test_get(data_file_path, directory)
+        print("\nTesting GET after DELETE:")
+        test_get(data_file_path, directory)
 
 
 if __name__ == "__main__":
-    dirs = [
-        "Banned",
-        # "Codes"
-    ]
-    for dir in dirs:
-        test_all_cases(dir)
+    print(timeit.timeit(test_all_cases, number=1))

@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import json
 from functools import lru_cache
 from urllib.parse import unquote
+import msgpack
 
 app = Flask(__name__)
 port = 3001
@@ -14,26 +15,19 @@ class DataHandler:
     @lru_cache(maxsize=None)
     def read_data(self):
         try:
-            with open(f"data/{self.data_file_path}.json", "r") as f:
-                data = json.load(f)
+            with open(f"data/{self.data_file_path}.msgpack", "rb") as f:
+                packed_data = f.read()
+                data = msgpack.unpackb(packed_data, raw=False)
                 return data
         except Exception as e:
             print("Error reading data:", e)
-            return (
-                jsonify(
-                    {
-                        "Success": False,
-                        "StatusCode": 404,
-                        "StatusMessage": "Data Not Found!",
-                    }
-                ),
-                404,
-            )
+            return None
 
     def write_data(self, data):
         try:
-            with open(f"data/{self.data_file_path}.json", "w") as f:
-                json.dump(data, f, indent=2)
+            packed_data = msgpack.packb(data)
+            with open(f"data/{self.data_file_path}.msgpack", "wb") as f:
+                f.write(packed_data)
         except Exception as e:
             print("Error writing data:", e)
 
