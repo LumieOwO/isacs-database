@@ -12,6 +12,7 @@ def test_get(data_file_path, directory):
     url = f"{base_url}/{data_file_path}"
     headers["Directory"] = directory
     response = requests.get(url, headers=headers)
+    print(url,headers)
     print(response.json())
 
 
