@@ -83,7 +83,6 @@ class DataHandler:
 
       modified_data = modify_func(data, directory, request_data)
       self.write_data(modified_data)
-      self.read_data.cache_clear()
       return jsonify({"success": True})
     except Exception as e:
       print("Error modifying data:", e)
@@ -121,7 +120,6 @@ class DataHandler:
 
       modified_data = self._delete_data(data, directory)
       self.write_data(modified_data)
-      self.read_data.cache_clear()
       return jsonify({"success": True})
     except Exception as e:
       print("Error deleting data:", e)
