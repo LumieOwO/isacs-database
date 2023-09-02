@@ -2,11 +2,12 @@ import aiohttp
 import asyncio
 import timeit
 
-base_url = "https://achingtraumaticoffices.idkdev2.repl.co"
+base_url = "http://achingtraumaticoffices.idkdev2.repl.co"
 
 headers = {
     "Content-Type": "application/json",
 }
+
 
 async def test_get(session, data_file_path, directory):
     url = f"{base_url}/{data_file_path}"
@@ -16,6 +17,7 @@ async def test_get(session, data_file_path, directory):
         print(url, headers)
         print(response_text)
 
+
 async def test_set(session, data_file_path, directory, value):
     url = f"{base_url}/{data_file_path}"
     data = {"value": value}
@@ -24,12 +26,14 @@ async def test_set(session, data_file_path, directory, value):
         response_text = await response.text()
         print(response_text)
 
+
 async def test_delete(session, data_file_path, directory):
     url = f"{base_url}/{data_file_path}"
     headers["Directory"] = directory
     async with session.delete(url, headers=headers) as response:
         response_text = await response.text()
         print(response_text)
+
 
 async def test_all_cases():
     directory = "24211592"
@@ -51,6 +55,7 @@ async def test_all_cases():
 
             print("\nTesting GET after DELETE:")
             await test_get(session, data_file_path, directory)
+
 
 if __name__ == "__main__":
     execution_time = timeit.timeit(lambda: asyncio.run(test_all_cases()), number=1)

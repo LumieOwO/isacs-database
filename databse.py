@@ -2,7 +2,7 @@ import os
 import msgpack
 from urllib.parse import unquote
 from flask import Flask, jsonify, request
-
+from waitress import serve
 app = Flask(__name__)
 port = 3001
 ErrorMSG = "null"
@@ -130,4 +130,4 @@ def delete_data(data_file_path):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0")
+    serve(app,host="0.0.0.0",port=5000,threads=32)
