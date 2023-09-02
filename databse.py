@@ -5,6 +5,7 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 port = 3001
+ErrorMSG = "null"
 
 
 class DataHandler:
@@ -19,13 +20,7 @@ class DataHandler:
         except Exception as e:
             print("Error reading data:", e)
             return (
-                jsonify(
-                    {
-                        "Success": False,
-                        "StatusCode": 404,
-                        "StatusMessage": "Data Not Found!",
-                    }
-                ),
+                ErrorMSG,
                 404,
             )
 
@@ -53,18 +48,9 @@ class DataHandler:
             "StatusCode": 404,
             "StatusMessage": "Data Not Found!",
         }:
-            response_body = jsonify(response_data)
-            return response_body, 404
+            return ErrorMSG, 404
 
-        success_response_data = {
-            "data": response_data,
-            "Success": True,
-            "StatusCode": 200,
-            "StatusMessage": "Data Successfully Found!",
-        }
-        success_response_body = jsonify(success_response_data)
-
-        return success_response_body, 200
+        return response_data, 200
 
     def modify_data(self, modify_func):
         try:
@@ -73,7 +59,7 @@ class DataHandler:
             directory = unquote(request.headers.get("Directory", ""))
             if directory is None or request_data is None:
                 return (
-                    jsonify({"success": False, "error": "Invalid request data"}),
+                    ErrorMSG,
                     400,
                 )
 
@@ -83,7 +69,7 @@ class DataHandler:
         except Exception as e:
             print("Error modifying data:", e)
             return (
-                jsonify({"success": False, "error": "Internal server error"}),
+                ErrorMSG,
                 500,
             )
 
@@ -104,7 +90,7 @@ class DataHandler:
 
             if not directory:
                 return (
-                    jsonify({"success": False, "error": "Invalid request data"}),
+                    ErrorMSG,
                     400,
                 )
 
@@ -114,7 +100,7 @@ class DataHandler:
         except Exception as e:
             print("Error deleting data:", e)
             return (
-                jsonify({"success": False, "error": "Internal server error"}),
+                ErrorMSG,
                 500,
             )
 
@@ -144,4 +130,4 @@ def delete_data(data_file_path):
 
 
 if __name__ == "__main__":
-    app.run(host="localhost")
+    app.run(host="0.0.0.0")
