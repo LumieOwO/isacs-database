@@ -1,7 +1,7 @@
 import requests
 import timeit
 
-base_url = "https://consideratedeliciousrar.idkdev2.repl.co"
+base_url = "https://achingtraumaticoffices.idkdev2.repl.co"
 
 headers = {
     "Content-Type": "application/json",
@@ -12,8 +12,8 @@ def test_get(data_file_path, directory):
     url = f"{base_url}/{data_file_path}"
     headers["Directory"] = directory
     response = requests.get(url, headers=headers)
-    print(url,headers)
-    print(response.json())
+    print(url, headers)
+    print(response.text)
 
 
 def test_set(data_file_path, directory, value):
@@ -21,14 +21,14 @@ def test_set(data_file_path, directory, value):
     data = {"value": value}
     headers["Directory"] = directory
     response = requests.post(url, headers=headers, json=data)
-    print(response.json())
+    print(response.text)
 
 
 def test_delete(data_file_path, directory):
     url = f"{base_url}/{data_file_path}"
     headers["Directory"] = directory
     response = requests.delete(url, headers=headers)
-    print(response.json())
+    print(response.text)
 
 
 def test_all_cases():
@@ -53,4 +53,4 @@ def test_all_cases():
 
 
 if __name__ == "__main__":
-    print(timeit.timeit(test_all_cases, number=1))
+    print(f"Tests took: {timeit.timeit(test_all_cases, number=1)}")
